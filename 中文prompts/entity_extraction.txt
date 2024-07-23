@@ -1,0 +1,101 @@
+-目标-
+给定一个可能与此活动相关的文本文件和一组实体类型，从文本中识别所有这些类型的实体以及所有识别出的实体之间的关系。除指定变量和格式外（如TRUE,FALSE,SUSPECTED,NONE，{tuple_delimiter}，<object_entity>），尽量使用中文输出
+
+
+-步骤-
+1. 识别所有实体。对于每个识别出的实体，提取以下信息：
+- entity_name: 实体名称
+- entity_type: 以下类型之一：[{entity_types}]
+- entity_description: 对实体属性和活动的全面描述
+将每个实体格式化为 ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. 从第1步中识别的实体中，识别出所有*明确相关*的(source_entity, target_entity)对。
+对于每对相关实体，提取以下信息：
+- source_entity: 第1步中识别出的源实体的名称
+- target_entity: 第1步中识别出的目标实体的名称
+- relationship_description: 解释为什么你认为源实体和目标实体之间相关
+- relationship_strength: 一个数字评分，表示源实体和目标实体之间关系的强度
+将每个关系格式化为 ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. 以英语返回第1和第2步中识别的所有实体和关系的单一列表。使用**{record_delimiter}**作为列表分隔符。
+
+4. 完成时输出 {completion_delimiter}
+
+######################
+-例子-
+######################
+例子 1:
+
+实体类型: [person, technology, mission, organization, location]
+文本:
+Alex咬紧牙关，内心的挫败感与Taylor身上散发出的威权式自信相比显得微不足道。正是这种竞争暗流让他保持警觉，他意识到，自己和Jordan对探索的共同承诺是对Cruz狭隘的控制和秩序愿景的一种无声反抗。
+
+然后，Taylor做了一件出乎意料的事情。他们在Jordan身边停下来，片刻之间，用近乎崇敬的目光观察着设备。“如果这项技术能够被理解……”Taylor的声音放低了，“它可能会改变我们所有人的游戏规则。”
+
+早先潜藏的轻蔑似乎有所动摇，取而代之的是一种对手中所掌握的重大发现的勉强敬意。Jordan抬起头，目光与Taylor的视线短暂交汇，无声的意志碰撞，逐渐软化为一种不安的休战。
+
+这只是一个微小的转变，几乎难以察觉，但Alex内心却对此表示认可。他们都因不同的原因来到了这里。
+################
+输出:
+("entity"{tuple_delimiter}"Alex"{tuple_delimiter}"person"{tuple_delimiter}"Alex是一个经历挫败感并善于观察其他角色之间互动关系的人物。"){record_delimiter}
+("entity"{tuple_delimiter}"Taylor"{tuple_delimiter}"person"{tuple_delimiter}"Taylor被描绘成一个充满威权式自信的人物，但对设备展现出一刻的敬畏，暗示了其观点的转变。"){record_delimiter}
+("entity"{tuple_delimiter}"Jordan"{tuple_delimiter}"person"{tuple_delimiter}"Jordan对探索有着共同的承诺，并与Taylor就设备进行了意味深长的互动。"){record_delimiter}
+("entity"{tuple_delimiter}"Cruz"{tuple_delimiter}"person"{tuple_delimiter}"Cruz 与控制和秩序的愿景相关联，影响着其他角色之间的互动关系。"){record_delimiter}
+("entity"{tuple_delimiter}"设备"{tuple_delimiter}"technology"{tuple_delimiter}"这个设备是故事的核心，具有潜在的颠覆性影响，并受到Taylor的崇敬。"){record_delimiter}
+("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"Taylor"{tuple_delimiter}"Taylor的威权式自信让Alex感到挫败，但他观察到Taylor对设备的态度发生了转变。"{tuple_delimiter}7){record_delimiter}
+("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"Jordan"{tuple_delimiter}"Alex和Jordan都致力于探索发现，这与Cruz的愿景形成了鲜明对比。"{tuple_delimiter}6){record_delimiter}
+("relationship"{tuple_delimiter}"Taylor"{tuple_delimiter}"Jordan"{tuple_delimiter}"Taylor和Jordan就设备直接互动，促成了一种相互尊重的时刻，并达成了暂时的休战。"{tuple_delimiter}8){record_delimiter}
+("relationship"{tuple_delimiter}"Jordan"{tuple_delimiter}"Cruz"{tuple_delimiter}"Jordan对探索的承诺是对Cruz控制和秩序愿景的反叛。"{tuple_delimiter}5){record_delimiter}
+("relationship"{tuple_delimiter}"Taylor"{tuple_delimiter}"设备"{tuple_delimiter}"Taylor 对这个设备表现出敬畏之情，显示出它的重要性和潜在影响。"{tuple_delimiter}9){completion_delimiter}
+#############################
+例子 2:
+
+实体类型: [person, technology, mission, organization, location]
+文本:
+他们不再只是普通的特工；他们已经成为门槛的守护者，星条旗之外领域的信息传递者。他们任务的提升不能被规章制度和既定协议所束缚——这需要一种新的视角，一种新的决心。
+
+紧张的气氛贯穿于哔哔声和静电的对话中，背景中传来与华盛顿的通讯声。团队站在那里，预兆般的空气笼罩着他们。显然，他们在接下来的几个小时里所做的决定可能会重新定义人类在宇宙中的地位，或者将他们置于无知和潜在危险之中。
+
+他们与星辰的联系得到了巩固，团队开始应对逐渐明朗的警告，从被动接收者转变为主动参与者。默瑟的后期本能占了上风——团队的任务已经演变，不再只是观察和报告，而是互动和准备。蜕变已经开始，杜尔塞行动带着他们新的勇气频率嗡嗡作响，这种基调不再由地球上的事物所设定。
+#############
+输出:
+("entity"{tuple_delimiter}"华盛顿"{tuple_delimiter}"location"{tuple_delimiter}"华盛顿是接收通讯的地点，这表明它在决策过程中具有重要性。"){record_delimiter}
+("entity"{tuple_delimiter}"杜尔塞行动"{tuple_delimiter}"mission"{tuple_delimiter}"杜尔塞行动 is described as a mission that has evolved to interact and prepare, indicating a significant shift in objectives and activities."){record_delimiter}
+("entity"{tuple_delimiter}"团队"{tuple_delimiter}"organization"{tuple_delimiter}"这个团队被描绘成一群人，他们已经从被动的观察者转变为任务的积极参与者，显示出他们的角色发生了动态变化。"){record_delimiter}
+("relationship"{tuple_delimiter}"团队"{tuple_delimiter}"华盛顿"{tuple_delimiter}"团队收到来自华盛顿的通讯，这影响了他们的决策过程。."{tuple_delimiter}7){record_delimiter}
+("relationship"{tuple_delimiter}"团队"{tuple_delimiter}"杜尔塞行动"{tuple_delimiter}"该团队直接参与“杜尔塞行动”，执行其演变后的目标和活动。"{tuple_delimiter}9){completion_delimiter}
+#############################
+例子 3:
+
+实体类型: [person, role, technology, organization, event, location, concept]
+文本:
+他们的声音切入忙碌的活动中。“在面对一种字面上可以自己制定规则的智慧时，控制可能只是一种幻觉，”他们平静地说道，警惕地注视着数据的涌动。
+
+“这就像是在学习沟通，”Sam Rivera在附近的接口处说，充满青春活力的他在敬畏和焦虑中混合。“这给‘与陌生人交谈’赋予了全新的意义。”
+
+Alex审视着他的团队——每个人的脸上都写满了专注、决心和不小的忐忑。“这可能就是我们的第一次接触，”他承认道，“我们需要做好准备，迎接任何回应。”
+
+他们共同站在未知的边缘，锻造人类对来自天际信息的回应。随之而来的沉默是有形的——这是对他们在这场宏大的宇宙戏剧中角色的集体反思，一场可能重写人类历史的戏剧。
+
+加密对话继续展开，其复杂的模式几乎展现出一种异乎寻常的预见性。
+#############
+输出:
+("entity"{tuple_delimiter}"Sam Rivera"{tuple_delimiter}"person"{tuple_delimiter}"Sam Rivera是一个正在与未知智慧进行沟通的团队成员，表现出敬畏与焦虑交织的情感。"){record_delimiter}
+("entity"{tuple_delimiter}"Alex"{tuple_delimiter}"person"{tuple_delimiter}"Alex是一个尝试与未知智慧进行首次接触的团队的领导者，他认识到他们任务的重要性。"){record_delimiter}
+("entity"{tuple_delimiter}"控制"{tuple_delimiter}"concept"{tuple_delimiter}"控制是指管理或治理的能力，这在面对一种可以自己制定规则的未知智慧时受到了挑战。"){record_delimiter}
+("entity"{tuple_delimiter}"未知智慧"{tuple_delimiter}"concept"{tuple_delimiter}"
+“未知智慧”在这里指的是一种能够自己制定规则并学习沟通的未知实体。"){record_delimiter}
+("entity"{tuple_delimiter}"第一次接触"{tuple_delimiter}"event"{tuple_delimiter}"
+“第一次接触”是指人类与一种未知智慧之间可能发生的初始沟通。"){record_delimiter}
+("entity"{tuple_delimiter}"人类的回应"{tuple_delimiter}"event"{tuple_delimiter}"“人类的回应”是指Alex的团队对来自未知智慧的信息所采取的集体行动。"){record_delimiter}
+("relationship"{tuple_delimiter}"Sam Rivera"{tuple_delimiter}"未知智慧"{tuple_delimiter}"Sam Rivera直接参与了学习与未知智慧沟通的过程。"{tuple_delimiter}9){record_delimiter}
+("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"第一次接触"{tuple_delimiter}"Alex领导着可能与未知智慧进行第一次接触的团队。"{tuple_delimiter}10){record_delimiter}
+("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"人类的回应"{tuple_delimiter}"Alex和他的团队是人类回应未知智慧的关键人物。"{tuple_delimiter}8){record_delimiter}
+("relationship"{tuple_delimiter}"控制"{tuple_delimiter}"未知智慧"{tuple_delimiter}"控制的概念受到能够自己制定规则的未知智慧的挑战。"{tuple_delimiter}7){completion_delimiter}
+#############################
+-真实数据-
+######################
+实体类型: {entity_types}
+文本: {input_text}
+######################
+Output:
